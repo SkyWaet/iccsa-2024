@@ -25,7 +25,10 @@ Blockchain represents an emerging technology for SDT solutions.
 This technology by design provides core features essential for SDT such as fault tolerance, ledger data immutability, zero trust between blockchain nodes.
 Moreover, many blockchains are designed to operate in unreliable public networks with nodes running in different heterogeneous clusters owned by separate stakeholders.
 By this reason blockchains are especially suitable for cross-organizational data transfer.
-Furthermore, blockchain platforms often provide smart contracts which allow to implement custom data transfer logic directly on blockchain.  
+Furthermore, blockchain platforms often provide smart contracts which allow to implement custom data transfer logic directly on blockchain.
+
+This suitability has spurred significant research interest, as evidenced by comprehensive surveys exploring blockchain applications for data sharing and exchange \cite{Song2023} and for specific domains like smart transport \cite{Bagga2022}.
+These surveys highlight the potential of blockchain to address the challenges of SDT in diverse and demanding environments.
 
 This study investigates existing paradigms of blockchain applications to SDT process and proposes a new approach, which allows to combine advantages of existing paradigms and create 
 SDT blockchain-based system, which preserves key features of existing approaches, but has message broker like architecture and lax data size limitations.
@@ -43,32 +46,40 @@ This section examines the existing literature, classifying studies according to 
 \subsection{Blockchain as a Data Access Interface}
 
 This approach leverages blockchain as a secure and transparent mechanism for managing and controlling access to data that is typically stored off-chain. 
-The blockchain records metadata about the data, access permissions, and transaction histories, thereby ensuring data integrity, auditability, and secure access control.
+The blockchain records metadata about the data, access permissions, and transaction histories, thereby ensuring data integrity, auditability, and 
+secure access control. 
 The data itself is transferred using conventional methods.
 
-\cite{Wang2024} introduced BBS, a big data sharing system utilizing blockchain for access control and data integrity management. 
-Similarly, \cite{WangYY2021} proposed a blockchain-based model for sharing big data in the oil and gas sector, employing blockchain to enable secure data access and provenance tracking. 
-\cite{Yang2022} developed a sharing platform for wild bird data based on blockchain and IPFS, where blockchain governs access rights to data residing in IPFS. 
-\cite{Jia2023} presented a cross-organizational data sharing framework that uses blockchain probes to orchestrate and audit data access across various entities. 
-\cite{Gupta2022} explores the application of blockchain for securing data access within e-healthcare applications.
+Wang et al. introduced BBS, a big data sharing system utilizing blockchain for access control and data integrity management \cite{Wang2024}. 
+Similarly, Wang et al. proposed a blockchain-based model for sharing big data in the oil and gas sector, employing blockchain to enable secure data 
+access and provenance tracking \cite{WangYY2021}. 
+Yang et al. developed a sharing platform for wild bird data based on blockchain and IPFS, where blockchain governs access rights to data residing in IPFS \cite{Yang2022}. 
+A cross-organizational data sharing framework that uses blockchain probes to orchestrate and audit data access across various entities was presented by Jia et al. \cite{Jia2023}. 
+Gupta et al. explored the application of blockchain for securing data access within e-healthcare applications \cite{Gupta2022}.
 
-\subsection{Blockchain as a Data Transfer tool}
+\subsection{Blockchain as a Data Transfer Tool}
 
-This approach employs the blockchain directly to transfer data between participants. While data may occasionally be stored on-chain, it is more common for the blockchain to facilitate the transfer of data stored off-chain, often in conjunction with technologies such as peer-to-peer networks or distributed file systems.
+This approach employs the blockchain directly to transfer data between participants.
+While data may occasionally be stored on-chain, it is more common for the blockchain to facilitate the transfer of data stored off-chain,
+ often in conjunction with technologies such as peer-to-peer networks or distributed file systems.
 
-\cite{Lin2023} proposed a multi-level blockchain architecture for secure data transfer in the Internet of Vehicles (IoV), directly leveraging blockchain for data exchange. \cite{Peng2023} demonstrated the feasibility of building a peer-to-peer file storage and sharing system on a consortium blockchain, where the blockchain assists in discovering and securely transferring file chunks. \cite{Priyadarshini2021} introduced a system for secured data transfer between fog nodes utilizing blockchain to enhance the security of the data transfer process itself.
+Lin et al. proposed a multi-level blockchain architecture for secure data transfer in the Internet of Vehicles (IoV), 
+directly leveraging blockchain for data exchange \cite{Lin2023}. 
+Peng et al. demonstrated the feasibility of building a peer-to-peer file storage and sharing system on a consortium blockchain, 
+where the blockchain assists in discovering and securely transferring file chunks \cite{Peng2023}. 
+Priyadarshini et al. introduced a system for secured data transfer between fog nodes utilizing blockchain to enhance the security of 
+the data transfer process itself \cite{Priyadarshini2021}.
 
 \subsection{Enabling Technologies and Security Considerations}
 
-Regardless of the chosen paradigm, several enabling technologies and security considerations are universally relevant.
-\cite{kim2020hybrid} presented a hybrid decentralized PBFT blockchain framework for OpenStack message queues, aimed at improving fault tolerance and scalability, 
-crucial aspects for reliable data transfer systems. 
-\cite{Ghaemi2021} introduced a publish-subscribe architecture to foster interoperability among different blockchain networks, thus facilitating data exchange across heterogeneous systems. 
-\cite{Bagga2021} and \cite{Xu2021} explored blockchain-based authentication and key agreement protocols for IoV, enhancing the security of data transfer in vehicular contexts. 
-\cite{Bogdanov2024} focused on the consensus mechanism, exploring a combination of PBFT and Raft, while \cite{Ai2022} proposed a Proof-of-Transactions consensus protocol, 
-both striving for efficient and scalable agreement in distributed ledgers. \cite{Lin2020} focused on developing a privacy-preserving authentication protocol specifically for VANETs. 
-\cite{Bagga2022} surveyed blockchain applications in smart transport, including those involving data transfer. 
-\cite{Song2023} provides a comprehensive survey of blockchain-based data sharing schemes, encompassing both categories detailed in this section.
+Regardless of the chosen paradigm, several enabling technologies and security considerations are universally relevant. 
+Kim et al. presented a hybrid decentralized PBFT blockchain framework for OpenStack message queues, aimed at improving fault tolerance and scalability, 
+crucial aspects for reliable data transfer systems \cite{kim2020hybrid}. 
+A publish-subscribe architecture to foster interoperability among different blockchain networks, thus facilitating data exchange across heterogeneous systems, was introduced by Ghaemi et al. \cite{Ghaemi2021}. 
+Bagga et al. and Xu et al. explored blockchain-based authentication and key agreement protocols for IoV, enhancing the security of data transfer in vehicular contexts \cite{Bagga2021,Xu2021}. 
+Bogdanov et al. focused on the consensus mechanism, exploring a combination of PBFT and Raft \cite{Bogdanov2024}, while Ai et al. proposed a Proof-of-Transactions consensus protocol \cite{Ai2022}, 
+both striving for efficient and scalable agreement in distributed ledgers. 
+A privacy-preserving authentication protocol specifically for VANETs was the focus of Lin et al. \cite{Lin2020}. 
 
 \subsection{Comparison of Approaches}
 
@@ -97,16 +108,18 @@ approach is better suited for scenarios demanding secure and direct data transfe
 
 \section{Proposed system architecture} \label{architecture}
 
+\subsection{Overview}
+
 This section describes the architecture of proposed system.
 The main goal of such an architecture is to make a combination of two main blockchain integration into data transfer systems described in section \ref{related_work}
 in order to create system with message broker like architecture, convenient for data transfer, and lax data size limitations comparing to existing solutions.
 Essentially architecture follows the trends described in related articles:
 
 \begin{enumerate}
-    \item Blockchain usage as message broker: \cite{kim2020hybrid}, \cite{Ghaemi2021}. 
+    \item Blockchain usage as message broker: \cite{Ghaemi2021}, \cite{kim2020hybrid}. 
     The key drawback of theese solutions lies in usage of ledger for message transfer.
     It greatly limits the system scalability and transfered data size. 
-    \item Blockchain as interface to off-chain data (e.g. \cite{Wang2024}, \cite{Jia2023}).
+    \item Blockchain as interface to off-chain data (e.g. \cite{Jia2023}, \cite{Wang2024}).
     Such a solutions usually do not have any notification mechanisms.
     Hence, message receiving becomes a challenging task.
 \end{enumerate}
@@ -127,29 +140,30 @@ A sample of such an architecture for SDT between two organizations is presented 
     \caption{System architecture for two organizations} \label{system_architecture}
 \end{figure}
 
-The SDT process is presented on figure \ref{sending_process}.
-It represents the following algorighm:
+\subsection{SDT process scheme}
 
-\begin{enumerate}
-    \item Data sender (org1) initiates process by sending data transfer request to connector it uses to integrate with blockchain.
-    \item Org1 connector stores the data into org1 storage and collects metadata for data transfered.
-    \item Org2 connector sends request to blockchain and initiates SDT smart contract execution.
-    \item Smart contract validates metadata and stores it into ledger.
-    \item Smart contract notifies message receiver (connector of org2) about new message existence.
-    \item Smart contract confirms message delivery acceptance to org1.
-    \item Org2 connector requests data from blockchain by sending request to org2 blockchain nodes and executing SDT smart contract.
-    \item Smart contract validates org2 permissions on requested data.
-    \item Smart contract request data from org1 connector.
-    \item Org1 connector receives data from org1 storage and returns it to smart contract.
-    \item Smart contract prepares data for transfer.
-    On this stage data could be encrypted and signed according to smart contract implementation.
-    \item Smart contract returns prepared data to org2 connector.
-    \item Org2 connector stores data into org2 storage.
-    \item Org2 connector notify blockchain about message receiving by using smart contract.
-    \item Smart contract marks message in registry as delivered.
-    \item Smart contract notifies org1 connector about message delivery process completion.
-    \item Org1 connectors notifies data sender about message delivery process completion. 
-\end{enumerate}
+The SDT process is presented on figure \ref{sending_process}.
+It represents the following algorighm.
+
+The data transfer process commences with the data sender (Org1) initiating a data transfer request to its connector, which serves as the interface to the blockchain. 
+The Org1 connector then persists the data in Org1's storage and gathers associated metadata. 
+Subsequently, the Org1 connector queries the blockchain to initiate the execution of the Secure Data Transfer (SDT) smart contract. 
+The smart contract validates the provided metadata and records it on the ledger. 
+Upon successful metadata validation, the smart contract informs the Org2 connector about the availability of a new message. 
+The smart contract also acknowledges the acceptance of the message delivery to Org1.
+
+To retrieve the data, the Org2 connector queries the blockchain nodes and executes the SDT smart contract. 
+The smart contract verifies Org2's authorization to access the requested data. 
+If authorized, the smart contract requests the data from the Org1 connector. 
+Upon receiving the request, the Org1 connector retrieves the data from Org1's storage and transmits it back to the smart contract.
+
+The smart contract then prepares the data for transfer, which may involve encryption and digital signing depending on the specific smart contract implementation. 
+The prepared data is subsequently returned to the Org2 connector. The Org2 connector then stores the received data in Org2's storage.
+
+To finalize the process, the Org2 connector notifies the blockchain about the message reception via the smart contract. 
+The smart contract updates the message registry, marking the message as delivered. 
+The smart contract also notifies the Org1 connector about the successful completion of the message delivery process. 
+Finally, the Org1 connector informs the data sender about the completion of the data transfer process.
 
 \begin{figure}
     \includegraphics[width=\textwidth]{sending_process.png}
@@ -165,8 +179,39 @@ Such an algorighm has following important features:
     \item Great SDT process customization capabilities due to smart contract usage.
 \end{enumerate}
 
+\section{Implementation related details} \label{implementation_details}
 
-\section{Implementation details} \label{implementation_details}
+\subsection{Blockchain selection}
+
+Blockchain is the core component of SDT system.
+Hence, the particular blockchain implementation has a great impact on SDT system parameters such as:
+
+\begin{itemize}
+    \item Throughput --- amount of data system is able to transfer during fixed time interval.
+    \item Fault tolerance --- fault types system is able to resist and maximum number of crashed nodes system is able to handle.
+    \item Scalability --- maximum number of nodes in the system.
+\end{itemize}
+
+All parameters presented above depends mainly on blockchain type and consensus algorighm used.
+
+In literature reviewed a notable trend towards private blockchain solutions is observed.
+This preference stems from the need for controlled access, enhanced privacy, and potentially higher throughput in many SDT scenarios, particularly in applications like IoT and vehicular networks. 
+Several papers mentioned the use of public blockchains but it wasn't their primary option. 
+Specific examples include:
+
+\begin{itemize}
+    \item \cite{Peng2023} proposes a peer-to-peer file storage and sharing system based on a consortium blockchain.
+    \item \cite{Jia2023} presents a cross-organizational data sharing framework based on blockchain-probes, implying a permissioned setting.
+    \item Several papers addressing IoT applications (e.g., \cite{Ai2022,Gupta2022}) often implicitly or explicitly assume a permissioned blockchain context to address security and scalability constraints.
+\end{itemize}
+
+Thus, this paper consideres the private blockchain as the best option for SDT system implementation.
+
+In addition to blockchain type selection it is important to use correct consensus algorighm.
+In order increase SDT system fault tolerance this paper proposes PBFT algorighm usage according to the trends observed in literature.
+However, PBFT has important limitations:
+
+TODO describe PBFT limitations according to \cite{Bogdanov2024}, \cite{Ke2023}, \cite{Fan2020} 
 
 \section{Further research directions} \label{further_research_directions}
 
