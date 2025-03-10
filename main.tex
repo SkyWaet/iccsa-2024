@@ -23,51 +23,48 @@
 
 \section{Introduction}
 
-In contemporary information societies, secure data transmission (SDT) is paramount for maintaining data confidentiality and integrity. 
-SDT systems are critical infrastructure components across diverse sectors, including financial institutions, governmental agencies, and enterprise.
+In contemporary information societies, secure data transmission (SDT) is paramount for maintaining data confidentiality and integrity.
+SDT systems are critical infrastructure components across diverse sectors, including financial institutions, governmental agencies, and enterprises.
 
-Implementing robust SDT mechanisms becomes particularly challenging when facilitating cross-organizational data exchange or connecting geographically dispersed departments within a single organization. 
-Such scenarios necessitate data transfer across external, public networks, thereby significantly elevating the risk of unauthorized data disclosure or modification during transit. 
-Consequently, rigorous data integrity verification and sender authentication protocols are indispensable. 
-Furthermore, confirmation of data reception is often a critical requirement. 
+Implementing robust SDT mechanisms becomes particularly challenging when facilitating cross-organizational data exchange or connecting geographically dispersed departments within a single organization.
+Such scenarios necessitate data transfer across external, public networks, thereby significantly elevating the risk of unauthorized data disclosure or modification during transit.
+Consequently, rigorous data integrity verification and sender authentication protocols are indispensable.
+Furthermore, confirmation of data reception is often a critical requirement.
 The heterogeneity of data exchange technologies employed by different entities can further complicate the SDT process.
 
-Blockchain represents an emerging technology for SDT solutions. 
-This technology by design provides core features essential for SDT such as fault tolerance, ledger data immutability, zero trust between blockchain nodes.
+Blockchain represents an emerging technology for SDT solutions.
+This technology by design provides core features essential for SDT, such as fault tolerance, ledger data immutability and zero trust between blockchain nodes.
 Moreover, many blockchains are designed to operate in unreliable public networks with nodes running in different heterogeneous clusters owned by separate stakeholders.
-By this reason blockchains are especially suitable for cross-organizational data transfer.
-Furthermore, blockchain platforms often provide smart contracts which allow to implement custom data transfer logic directly on blockchain.
+For this reason, blockchains are especially suitable for cross-organizational data transfer.
+Furthermore, blockchain platforms often provide smart contracts, which allow implementing custom data transfer logic directly on the blockchain.
 
 This suitability has spurred significant research interest, as evidenced by comprehensive surveys exploring blockchain applications for data sharing and exchange \cite{Song2023} and for specific domains like smart transport \cite{Bagga2022}.
 These surveys highlight the potential of blockchain to address the challenges of SDT in diverse and demanding environments.
 
-This study investigates existing paradigms of blockchain applications to SDT process and proposes a new approach, which allows to combine advantages of existing paradigms and create 
-SDT blockchain-based system, which preserves key features of existing approaches, but has message broker like architecture and lax data size limitations.
-The study is organized in a following way. 
-In section \ref{related_work} existing data transfer paradigms are described in detail.
-In section \ref{architecture} proposed system architecture is presented.
-In section \ref{implementation_details} implementation details of proposed system are described.
-In section \ref{summary} further research directions are provided.
+This study investigates existing paradigms of blockchain applications to the SDT process and proposes a new approach, which allows to combine the advantages of existing paradigms and create 
+a SDT blockchain-based system that preserves key features of existing approaches but has a message broker-like architecture and relaxed data size limitations.
+The study is organized in the following way.
+Section \ref{related_work} describes existing data transfer paradigms in detail.
+Section \ref{architecture} represents the proposed system architecture.
+Section \ref{implementation_details} describes implementation details of the proposed system.
+Finally, Section \ref{summary} concludes this article and denotes further research directions.
 
 \section{Related Work} \label{related_work}
 
-The integration of blockchain technology into data transfer systems presents two primary paradigms: blockchain as a data access interface and blockchain as a direct data transfer tool. 
+The integration of blockchain technology into data transfer systems presents two primary paradigms: blockchain as a data access interface and blockchain as a direct data transfer tool.
 This section examines the existing literature, classifying studies according to these two distinct roles of blockchain in facilitating data exchange.
 
 \subsection{Blockchain as a Data Access Interface}
 
-This approach leverages blockchain as a secure and transparent mechanism for managing and controlling access to data that is typically stored off-chain. 
-The blockchain records metadata about the data, access permissions, and transaction histories, thereby ensuring data integrity, auditability, and 
-secure access control. 
+This approach leverages blockchain as a secure and transparent mechanism for managing and controlling access to data that is typically stored off-chain.
+The blockchain records metadata about the data, access permissions, and transaction histories, thereby ensuring data integrity, auditability, and secure access control.
 The data itself is transferred using conventional methods.
 
-Wang et al. introduced BBS, a big data sharing system utilizing blockchain for access control and data integrity management \cite{Wang2024}. 
-Similarly, Wang et al. proposed a blockchain-based model for sharing big data in the oil and gas sector, employing blockchain to enable secure data 
-access and provenance tracking \cite{WangYY2021}. 
-Yang et al. developed a sharing platform for wild bird data based on blockchain and IPFS, where blockchain governs access rights to data residing in IPFS \cite{Yang2022}. 
-A cross-organizational data sharing framework that uses blockchain probes to orchestrate and audit data access across various entities was presented by Jia et al. \cite{Jia2023}. 
+Wang et al. introduced BBS, a big data sharing system utilizing blockchain for access control and data integrity management \cite{Wang2024}.
+Similarly, Wang et al. proposed a blockchain-based model for sharing big data in the oil and gas sector, employing blockchain to enable secure data access and provenance tracking \cite{WangYY2021}.
+Yang et al. developed a sharing platform for wild bird data based on blockchain and IPFS, where blockchain governs access rights to data residing in IPFS \cite{Yang2022}.
+A cross-organizational data sharing framework that uses blockchain probes to orchestrate and audit data access across various entities was presented by Jia et al. \cite{Jia2023}.
 Gupta et al. explored the application of blockchain for securing data access within e-healthcare applications \cite{Gupta2022}.
-
 \subsection{Blockchain as a Data Transfer Tool}
 
 This approach employs the blockchain directly to transfer data between participants.
@@ -98,9 +95,9 @@ The two approaches, blockchain as a data access interface and blockchain as a da
 \begin{table}[h!]
 \caption{Comparison of Blockchain Approaches for Data Transfer}
 \label{tab:comparison}
-\begin{tabular}{|p{20mm}|p{50mm}|p{50mm}|}
+\begin{tabular}{|p{2.0cm}|p{5.0cm}|p{5.0cm}|}
 \hline
-Feature & Blockchain as Data Access Interface & Blockchain as Data Transfer tool \\ \hline
+Feature & Blockchain as Data Access Interface & Blockchain as Data Transfer Tool \\ \hline
 Data Storage & Primarily Off-Chain & Often Off-Chain, but metadata on-chain \\ \hline
 Data Transfer & Traditional methods & Blockchain or Blockchain-assisted \\ \hline
 Scalability & Higher, as data transfer is off-chain & Potentially Lower, dependent on blockchain throughput \\ \hline
@@ -120,30 +117,30 @@ approach is better suited for scenarios demanding secure and direct data transfe
 
 \subsection{Overview}
 
-This section describes the architecture of proposed system.
-The main goal of such an architecture is to create a combination of two main blockchain integration into data transfer systems described in section \ref{related_work}
-in order to create system with message broker like architecture, convenient for data transfer, and lax data size limitations comparing to existing solutions.
-Essentially architecture follows the trends described in related articles:
+This section describes the architecture of the proposed system.
+The main goal of such an architecture is to create a combination of the two main blockchain integration paradigms into data transfer systems described in Section \ref{related_work}
+in order to create a system with a message broker-like architecture, convenient for data transfer, and relaxed data size limitations compared to existing solutions.
+Essentially, the architecture follows the trends described in related articles:
 
 \begin{enumerate}
-    \item Blockchain usage as message broker: \cite{Ghaemi2021}, \cite{kim2020hybrid}. 
-    The key drawback of theese solutions lies in usage of ledger for message transfer.
-    It greatly limits the system scalability and transfered data size. 
-    \item Blockchain as interface to off-chain data (e.g. \cite{Jia2023}, \cite{Wang2024}).
-    Such a solutions usually do not have any notification mechanisms.
+    \item Blockchain usage as a message broker: \cite{Ghaemi2021}, \cite{kim2020hybrid}. 
+    The key drawback of these solutions lies in the usage of the ledger for message transfer.
+    It greatly limits the system scalability and transferred data size. 
+    \item Blockchain as an interface to off-chain data (e.g., \cite{Jia2023}, \cite{Wang2024}).
+    Such solutions usually do not have any notification mechanisms.
     Hence, message receiving becomes a challenging task.
 \end{enumerate}
 
-Proposed architecture assumes that system should contain the following components:
+The proposed architecture assumes that the system should contain the following components:
 
 \begin{itemize}
-    \item Blockchain as main data transfer tool. 
-    \item Data storages internaly used by counterparties (organizations) to store the data to be sent;
-    \item Connectors --- some application used by SDT process counterparties in order to create connection between their data storages
-    and blockchain nodes owned by organization (mainly inspired by blockchain probes described in \cite{Jia2023})
+    \item Blockchain as the main data transfer tool. 
+    \item Data storages internally used by counterparties (organizations) to store the data to be sent.
+    \item Connectors --- some application used by SDT process counterparties in order to create a connection between their data storages
+    and blockchain nodes owned by the organization (mainly inspired by blockchain probes described in \cite{Jia2023}).
 \end{itemize}
 
-A sample of such an architecture for SDT between two organizations is presented on figure \ref{system_architecture}.
+A sample of such an architecture for SDT between two organizations is presented in Figure \ref{system_architecture}.
 
 \begin{figure}
     \includegraphics[width=\textwidth]{system_architecture.png}
@@ -152,8 +149,8 @@ A sample of such an architecture for SDT between two organizations is presented 
 
 \subsection{SDT process scheme}
 
-The SDT process is presented on figure \ref{sending_process}.
-It represents the following algorighm.
+The SDT process is presented in Figure \ref{sending_process}.
+It represents the following algorithm.
 
 The data transfer process commences with the data sender (Org1) initiating a data transfer request to its connector, which serves as the interface to the blockchain. 
 The Org1 connector then persists the data in Org1's storage and gathers associated metadata. 
@@ -180,33 +177,33 @@ Finally, the Org1 connector informs the data sender about the completion of the 
     \caption{SDT process scheme} \label{sending_process}
 \end{figure}
 
-Such an algorighm has following important features:
+Such an algorithm has the following important features:
 
 \begin{enumerate}
-    \item Loose coupling between sender and receiver due to blockchain usage as message broker.
-    \item Better fault tolerance comparing to regular message brokers.
-    \item More convenient message broker like SDT interface comparing to existing blockchain solutions.
-    \item Great SDT process customization capabilities due to smart contract usage.
+    \item Loose coupling between sender and receiver due to blockchain usage as a message broker.
+    \item Better fault tolerance compared to regular message brokers.
+    \item More convenient message broker-like SDT interface compared to existing blockchain solutions.
+    \item Greater SDT process customization capabilities due to smart contract usage.
 \end{enumerate}
 
 \section{Implementation details} \label{implementation_details}
 
 \subsection{Blockchain selection}
 
-Blockchain is the core component of SDT system.
-Hence, the particular blockchain implementation has a great impact on SDT system parameters such as:
+Blockchain is the core component of the SDT system.
+Hence, the particular blockchain implementation has a significant impact on SDT system parameters such as:
 
 \begin{itemize}
-    \item Throughput --- amount of data system is able to transfer during fixed time interval.
-    \item Fault tolerance --- fault types system is able to resist and maximum number of crashed nodes system is able to handle.
-    \item Scalability --- maximum number of nodes in the system.
+    \item Throughput --- the amount of data the system is able to transfer during a fixed time interval.
+    \item Fault tolerance --- fault types the system is able to resist and the maximum number of crashed nodes the system is able to handle.
+    \item Scalability --- the maximum number of nodes in the system.
 \end{itemize}
 
-All parameters presented above depends mainly on blockchain type and consensus algorighm used.
+All parameters presented above depend mainly on the blockchain type and consensus algorithm used.
 
-In literature reviewed a notable trend towards private blockchain solutions is observed.
+In the literature reviewed, a notable trend towards private blockchain solutions is observed.
 This preference stems from the need for controlled access, enhanced privacy, and potentially higher throughput in many SDT scenarios, particularly in applications like IoT and vehicular networks. 
-Several papers mentioned the use of public blockchains but it wasn't their primary option. 
+Several papers mentioned the use of public blockchains, but it was not their primary option. 
 Specific examples include:
 
 \begin{itemize}
@@ -215,55 +212,54 @@ Specific examples include:
     \item Several papers addressing IoT applications (e.g., \cite{Ai2022,Gupta2022}) often implicitly or explicitly assume a permissioned blockchain context to address security and scalability constraints.
 \end{itemize}
 
-Thus, this paper consideres the private blockchain as the best option for SDT system implementation.
+Thus, this paper considers the private blockchain as the best option for SDT system implementation.
 
-In addition to blockchain type selection it is important to use correct consensus algorighm.
-In order increase SDT system fault tolerance this paper proposes PBFT algorighm usage according to the trends observed in literature.
+In addition to blockchain type selection, it is important to use the correct consensus algorithm.
+In order to increase SDT system fault tolerance, this paper proposes PBFT algorithm usage according to the trends observed in the literature.
 However, PBFT has known performance limitations.
 
-To start with, PBFT implementations require large volumes of data to be transfered between blockchain nodes in order to achieve consensus.
-For example, BFT-SMaRT algorighm used by Hyperledger Fabric \cite{barger2021byzantine} necessitates the transmission of 80 MB of traffic from each node 
-in order to achieve performance of 2500 transactions per second, which implies in transfer of 720 MB of traffic within a cluster of just 10 nodes during all consensus algorithm stages.
+To start with, PBFT implementations require large volumes of data to be transferred between blockchain nodes in order to achieve consensus.
+For example, the BFT-SMaRT algorithm used by Hyperledger Fabric \cite{barger2021byzantine} necessitates the transmission of 80 MB of traffic from each node 
+in order to achieve a performance of 2500 transactions per second, which implies the transfer of 720 MB of traffic within a cluster of just 10 nodes during all consensus algorithm stages.
 
-Furthermore, such a consensus algorighm throughput depends on amount of nodes in the system.
-According to research \cite{barger2021byzantine}, BFT-SMaRT achieves maximum throughput when system contains 7 nodes.
+Furthermore, the throughput of such a consensus algorithm depends on the amount of nodes in the system.
+According to research \cite{barger2021byzantine}, BFT-SMaRT achieves maximum throughput when the system contains 7 nodes.
 Increasing the number of nodes in the system leads to throughput degradation.
 The maximum amount of nodes, according to research \cite{Ke2023}, is limited to 100.
 
-By the reasons described above pure PBFT blockchain is not suitable for scalable fault tolerant systems creation.
-Fortunately, this limitation could be solved by using multi-layered blockchain architecture described in \cite{Bogdanov2024} and \cite{Lin2023} and 
+For the reasons described above, a pure PBFT blockchain is not suitable for scalable, fault-tolerant systems creation.
+Fortunately, this limitation could be solved by using the multi-layered blockchain architecture described in \cite{Bogdanov2024} and \cite{Lin2023} and 
 data flow separation into topics and partitions traditional for message brokers like Apache Kafka \cite{apachekafka}.
 
 This paper proposes the usage of the following two-layered blockchain:
 \begin{itemize}
-    \item The first layer utilizes PBFT consensus algorithm.
-    Due to known algorighm limitations, this layer is to be constructed from many relatively small (up to 7 nodes) clusters.
-    This layer represents the concept of partition --- smallest system part responsible for message transfer.
-    \item The second layer utilizes RAFT \cite{ongaro2015raft} consensus algorighm.
+    \item The first layer utilizes the PBFT consensus algorithm.
+    Due to known algorithm limitations, this layer is to be constructed from many relatively small (up to 7 nodes) clusters.
+    This layer represents the concept of a partition --- the smallest system part responsible for message transfer.
+    \item The second layer utilizes the RAFT \cite{ongaro2015raft} consensus algorithm.
     This layer is going to be utilized for two main purposes --- system management and asynchronous data replication after PBFT consensus rounds.
-    Thus, this layer is analogue for topic concept of message broker.
+    Thus, this layer is analogous to the topic concept of a message broker.
 \end{itemize}
 
-Such an architecture allows to preserve all fault tolerance features provided by PBFT consensus algorighm while increasing system scalability.
-The scaling process of such a system do not require PBFT cluster size growth. 
-Instead, new small PBFT layer 1 cluster is to be created and connected to existing RAFT layer 2 cluster, which has lax limit on maximum number of nodes.
-
+Such an architecture allows us to preserve all fault tolerance features provided by the PBFT consensus algorithm while increasing system scalability.
+The scaling process of such a system does not require PBFT cluster size growth. 
+Instead, a new small PBFT layer 1 cluster is to be created and connected to the existing RAFT layer 2 cluster, which has a relaxed limit on the maximum number of nodes.
 \section{Summary} \label{summary}
 
-The paper proposes a novel architecture for secure data transfer (SDT) systems leveraging blockchain technology. 
-It combines the advantages of two existing paradigms: blockchain as a data access interface and blockchain as a direct data transfer tool. 
-The architecture features a message broker-like design, overcoming data size limitations of existing blockchain-based SDT solutions. 
-The proposed system incorporates blockchain, data storages internal to organizations, and connectors that bridge the data storages with blockchain nodes. 
-The SDT process involves the sender's connector initiating a smart contract on the blockchain, which manages data access, transfer, and confirmation, while the actual data is stored off-chain within the organization's data storage. The paper advocates for a private, two-layered blockchain implementation. 
-The first layer uses PBFT consensus within smaller clusters for efficient message transfer (partitions), while the second layer employs RAFT consensus for system management and asynchronous data replication (topics). 
-This layered approach enhances both fault tolerance and scalability. 
+The paper proposes a novel architecture for secure data transfer (SDT) systems leveraging blockchain technology.
+It combines the advantages of two existing paradigms: blockchain as a data access interface and blockchain as a direct data transfer tool.
+The architecture features a message broker-like design, overcoming data size limitations of existing blockchain-based SDT solutions.
+The proposed system incorporates blockchain, data storages internal to organizations, and connectors that bridge the data storages with blockchain nodes.
+The SDT process involves the sender's connector initiating a smart contract on the blockchain, which manages data access, transfer, and confirmation, while the actual data is stored off-chain within the organization's data storage. The paper advocates for a private, two-layered blockchain implementation.
+The first layer uses PBFT consensus within smaller clusters for efficient message transfer (partitions), while the second layer employs RAFT consensus for system management and asynchronous data replication (topics).
+This layered approach enhances both fault tolerance and scalability.
 
-Further research is going to be focused mainly on the following directions:
+Further research is going to focus mainly on the following directions:
 
 \begin{enumerate}
-    \item Proposed system implementation and evaluation of developed prototype;
-    \item Specific consensus algorithms implementations selection;
-    \item Load balancing mechanism for specific partition selection.
+    \item Implementation of the proposed system and evaluation of the developed prototype.
+    \item Selection of specific consensus algorithm implementations.
+    \item Development of a load balancing mechanism for specific partition selection.
 \end{enumerate}
 
 \bibliographystyle{splncs04}
