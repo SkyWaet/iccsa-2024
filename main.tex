@@ -253,74 +253,71 @@ Instead, a new small PBFT layer 1 cluster is to be created and connected to the 
 
 \subsection{Data Flow Separation}\label{data-flow}
 
-This section describes the proposed data flow separation scheme.
-As was mentioned above, the data flow of SDT system is to be separated into topics and partitions. 
+This section delineates the proposed data flow separation scheme. 
+As previously mentioned, the data flow of the SDT system is partitioned into topics and partitions.
 
-The topic is considered as the flow of data unified by common theme or list of consumers.
-Due to limitations described above each topic is divided into list of partitions.
-A sample of such a data flow separation into two partitions is presented on fig. \ref{blockchain_layers}.
+A topic is defined as a data stream unified by a common theme or a list of consumers. 
+To address the limitations outlined earlier, each topic is further subdivided into a list of partitions.
+ An illustrative example of such a data flow separation into two partitions is depicted in Fig. \ref{blockchain_layers}.
 
 \begin{figure}
     \includegraphics[width=\textwidth]{two-layered-blockchain.png}
-    \caption{Structure of topic with two partitions} \label{blockchain_layers}
+    \caption{Structure of a topic with two partitions} \label{blockchain_layers}
 \end{figure}
 
-There are two main problems to be solved in order to perform such a data flow separation:
+Two primary challenges must be addressed to implement this data flow separation:
 
 \begin{itemize}
-    \item How to select a specific blockchain node for SDT process initialization considering effictive load balancing?
-    \item How to select partition for specific message?
+    \item How to select a specific blockchain node for SDT process initialization while ensuring effective load balancing?
+    \item How to select the appropriate partition for a specific message?
 \end{itemize}
 
-The specific load balancing algorithm selection is a separate research direction.
-That's why it is not discussed in this article.
+The selection of a specific load balancing algorithm constitutes a separate area of research and, therefore, falls outside the scope of this article.
 
-Regarding the second problem, in order to select the partition this paper proposes the usage of hash partitioning used by Apache Kafka.
-Thus, the partition will be selected as the remainder of dividing the key hash by the number of partitions.
+Concerning the second challenge, this paper proposes the utilization of hash partitioning, a technique employed by Apache Kafka, for partition selection.  
+The partition is determined by calculating the remainder of dividing the key's hash value by the total number of partitions.
 
-In order to store the topic configuration data it is proposed to use the layer 2 ledger of blockchain.
-Each node of this blockchain layer should store the list of partitions and list of nodes for each partition.
-All structural changes inside topic (e.g. new partition creation) should be performed using separate smart contract. 
+To store the topic configuration data, the layer-2 ledger of the blockchain is proposed. 
+Each node within this blockchain layer stores a list of partitions and a corresponding list of nodes for each partition. 
+Any structural modifications within a topic, such as the creation of a new partition, are to be executed via a dedicated smart contract.
 
-The main advantage of such an approach is that configuration data is replicated across all the blockchain nodes.
-That's why the data senders are able to receive this data from every topic node.
-Thus, system does not have any specific control nodes like Apache Zookeeper nodes for Apache Kafka, which increases system fault tolerance 
-due to the absence of single point of failure.
+A key advantage of this approach lies in the replication of configuration data across all blockchain nodes. 
+Consequently, data senders can retrieve this data from any topic node. 
+This eliminates the need for dedicated control nodes, such as Apache Zookeeper nodes in Apache Kafka, thereby enhancing system fault tolerance by mitigating the risk of a single point of failure.
+
 
 \subsection{Data Replication}\label{data-replication}
+As previously discussed, a primary advantage of utilizing blockchain technology in a data transfer system is its ability to provide verifiable evidence of message delivery by immutably recording the data transfer history within its ledger.
+ Given the system's separation into multiple partitions, verifying message delivery necessitates identifying the specific partition used for the message's transmission. 
+ This task is complicated by the fact that the system configuration may evolve over time, potentially requiring an iterative search across all existing partitions.
+ To streamline the message delivery verification process, data replication to all topic nodes is essential.
 
-As was mentioned above, one of the key reasons of blockchain usage in data transfer system is that blockchain by storing all data transfer history inside ledger
-provides a way to verofy the fact of the delivery of the message.
-Due to the system separation into several partitions, in order to perform such an operation it is required to determine the specific partition used for specific message transfer.
-Considering the fact that system configuration may change across the time this task become awkward and may require iteration over all existing partitions.
-In order to simplify the process of message delivery verification the data replication to all topic nodes is required.
+To facilitate this data replication mechanism, this article introduces the concepts of global and local ledgers. 
+The global ledger, maintained at the topic level, essentially represents the union of all partition-specific ledgers, which we term local ledgers. 
+The global ledger is updated asynchronously with data from the local ledgers through a dedicated periodic task. 
+This task implements the following algorithm:
 
-For the purpose of data replication mechanism creation this article introduces the concepts of global and local ledgers.
-The global ledger is stored at topic level and essentially represent the union of all partition ledgers (called local).
-It is updated asynchronously with data from partition ledgers with usage of special periodic task.
-This task should implement the following algorithm:
-
-\begin{itemize}
-    \item Get list of partitions from topic configuration ledger.
+\begin{enumerate}
+    \item Retrieve the list of partitions from the topic configuration ledger.
     \item For each partition:
-    \begin{itemize}
-        \item Find the key of last replicated block.
-        \item Query the local partition ledger to check the presence of new data.
-        \item If new data is found, copy all new data blocks to global ledger. 
-    \end{itemize}
-\end{itemize}
+    \begin{enumerate}
+        \item Identify the key of the last replicated block.
+        \item Query the local partition ledger to ascertain the presence of new data.
+        \item If new data is found, copy all new data blocks to the global ledger.
+    \end{enumerate}
+\end{enumerate}
 
-The example of such an algorithm execution for two partitions is presented on Fig. \ref{global-and-local-ledgers}.
-On this picture last replicated blocks are colored in yellow, while nodes to be replicated are colored in green.
-Before the algorithm execution there were three blockchain nodes to be replicated --- one from the Partition 1 and two from Partition 2.
-After the replication process all these blocks are appended to corresponding blockchains in global ledger.
+An illustrative example of this algorithm's execution for two partitions is presented in Fig. \ref{global-and-local-ledgers}. 
+In the figure, the last replicated blocks are highlighted in yellow, while the blocks slated for replication are depicted in green. 
+Prior to the algorithm's execution, there are three blockchain nodes awaiting replication: one from Partition 1 and two from Partition 2. 
+Following the replication process, these blocks are appended to their corresponding blockchains within the global ledger.
 
 \begin{figure}
     \includegraphics[width=\textwidth]{global-and-local-ledgers.png}
     \caption{Data replication to global ledger} \label{global-and-local-ledgers}
 \end{figure}
 
-Considering the fact the algorithm is running on second blockchain layer, all changes to global ledger again are performed using RAFT consensus algorithm.
+Given that the algorithm operates on the second blockchain layer, all modifications to the global ledger are, again, governed by the RAFT consensus algorithm.
 
 \section{Summary} \label{summary}
 
