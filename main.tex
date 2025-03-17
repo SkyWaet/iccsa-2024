@@ -190,66 +190,66 @@ Such an algorithm has the following important features:
 
 \subsection{Blockchain Selection}
 
-Blockchain is the core component of the SDT system.
-Hence, the particular blockchain implementation has a significant impact on SDT system parameters such as:
+Blockchain technology constitutes the core component of the SDT system. 
+Consequently, the specific blockchain implementation exerts a significant influence on key system parameters, including:
 
 \begin{itemize}
-    \item Throughput --- the amount of data the system is able to transfer during a fixed time interval.
-    \item Fault tolerance --- fault types the system is able to resist and the maximum number of crashed nodes the system is able to handle.
-    \item Scalability --- the maximum number of nodes in the system.
+    \item \textbf{Throughput:} The volume of data the system can transfer within a defined time interval.
+    \item \textbf{Fault Tolerance:} The types of faults the system can withstand and the maximum number of node failures the system can accommodate while maintaining functionality.
+    \item \textbf{Scalability:} The maximum permissible number of nodes within the system.
 \end{itemize}
 
-All parameters presented above depend mainly on the blockchain type and consensus algorithm used.
+The parameters delineated above are primarily governed by the blockchain type and the employed consensus algorithm.
 
-In the literature reviewed, a notable trend towards private blockchain solutions is observed.
-This preference stems from the need for controlled access, enhanced privacy, and potentially higher throughput in many SDT scenarios, particularly in applications like IoT and vehicular networks. 
-Several papers mentioned the use of public blockchains, but it was not their primary option. 
+A review of the existing literature reveals a prevalent trend favoring private blockchain solutions. 
+This preference arises from the necessity for controlled access, enhanced privacy, and the potential for higher throughput in many SDT scenarios, particularly within applications such as IoT and vehicular networks. 
+While several studies mention the potential use of public blockchains, they are not typically presented as the primary option.  
 Specific examples include:
 
 \begin{itemize}
     \item \cite{Peng2023} proposes a peer-to-peer file storage and sharing system based on a consortium blockchain.
-    \item \cite{Jia2023} presents a cross-organizational data sharing framework based on blockchain-probes, implying a permissioned setting.
-    \item Several papers addressing IoT applications (e.g., \cite{Ai2022,Gupta2022}) often implicitly or explicitly assume a permissioned blockchain context to address security and scalability constraints.
+    \item \cite{Jia2023} presents a cross-organizational data sharing framework based on blockchain-probes, indicative of a permissioned setting.
+    \item Numerous papers addressing IoT applications (e.g., \cite{Ai2022,Gupta2022}) often implicitly or explicitly assume a permissioned blockchain context to address security and scalability constraints.
 \end{itemize}
 
-Thus, this paper considers the private blockchain as the best option for SDT system implementation.
+Therefore, this paper posits that a private blockchain is the most suitable option for SDT system implementation.
 
-In addition to blockchain type selection, it is important to use the correct consensus algorithm.
-In order to increase SDT system fault tolerance, this paper proposes PBFT algorithm usage according to the trends observed in the literature.
-However, PBFT has known performance limitations.
+In addition to selecting the appropriate blockchain type, employing the correct consensus algorithm is crucial. 
+To enhance the SDT system's fault tolerance, this paper proposes the utilization of the Practical Byzantine Fault Tolerance (PBFT) algorithm, aligning with observed trends in the literature. 
+However, PBFT is known to have inherent performance limitations.
 
-To start with, PBFT implementations require large volumes of data to be transferred between blockchain nodes in order to achieve consensus.
-For example, the BFT-SMaRT algorithm used by Hyperledger Fabric \cite{barger2021byzantine} necessitates the transmission of 80 MB of traffic from each node 
-in order to achieve a performance of 2500 transactions per second, which implies the transfer of 720 MB of traffic within a cluster of just 10 nodes during all consensus algorithm stages.
+Firstly, PBFT implementations necessitate the transfer of substantial data volumes between blockchain nodes to achieve consensus. 
+For instance, the BFT-SMaRT algorithm, employed by Hyperledger Fabric \cite{barger2021byzantine}, requires each node to transmit 80 MB of data to achieve a performance of 2500 transactions per second. 
+This implies a total traffic volume of 720 MB within a cluster of only 10 nodes during all consensus algorithm stages.
 
-Furthermore, the throughput of such a consensus algorithm depends on the amount of nodes in the system.
-According to research \cite{barger2021byzantine}, BFT-SMaRT achieves maximum throughput when the system contains 7 nodes (Fig. \ref{fig:smartbft-global}).
+Furthermore, the throughput of such a consensus algorithm is contingent upon the number of nodes within the system. 
+Research \cite{barger2021byzantine} indicates that BFT-SMaRT achieves maximum throughput when the system comprises 7 nodes (Fig. \ref{fig:smartbft-global}).
 
 \begin{figure}[ht!]
     \centering\includegraphics[width=\textwidth]{smartbft-global.png}
-    \caption{BFT-SMaRT performance in global network}
+    \caption{BFT-SMaRT performance in a global network}
     \label{fig:smartbft-global}
 \end{figure}
 
-Increasing the number of nodes in the system leads to throughput degradation.
-The maximum amount of nodes, according to research \cite{Ke2023}, is limited to 100.
+Increasing the number of nodes beyond this optimum leads to a degradation in throughput. 
+The maximum permissible number of nodes, according to research \cite{Ke2023}, is limited to approximately 100.
 
-For the reasons described above, a pure PBFT blockchain is not suitable for scalable, fault-tolerant systems creation.
-Fortunately, this limitation could be solved by using the multi-layered blockchain architecture described in \cite{Bogdanov2024} and \cite{Lin2023} and 
-data flow separation into topics and partitions traditional for message brokers like Apache Kafka \cite{apachekafka}.
+For the reasons articulated above, a pure PBFT blockchain is not ideally suited for the creation of scalable and fault-tolerant systems. 
+Fortunately, this limitation can be addressed by leveraging the multi-layered blockchain architecture described in \cite{Bogdanov2024} and \cite{Lin2023}, 
+coupled with the data flow separation into topics and partitions, a common practice in message brokers such as Apache Kafka \cite{apachekafka}.
 
-This paper proposes the usage of the two-layered blockchain.
-The first layer utilizes the PBFT consensus algorithm.
-Due to known algorithm limitations, this layer is to be constructed from many relatively small (up to 7 nodes) clusters.
-This layer represents the concept of a partition --- the smallest system part responsible directly for SDT smart contract execution.
+This paper proposes the use of a two-layered blockchain architecture. 
+The first layer employs the PBFT consensus algorithm.  
+Given the algorithm's known limitations, this layer will be constructed from multiple, relatively small clusters, each consisting of up to 7 nodes. 
+This layer embodies the concept of a partition, representing the smallest system component directly responsible for the execution of SDT smart contracts.
 
-The next layer utilizes the RAFT \cite{ongaro2015raft} consensus algorithm.
-This layer is going to be utilized for two main purposes --- system management (described in section \ref{data-flow}) and asynchronous data replication after PBFT consensus rounds (described in section \ref{data-replication}).
-Thus, this layer is analogous to the topic concept of a message broker.
+The subsequent layer leverages the RAFT consensus algorithm \cite{ongaro2015raft}. 
+This layer is designed for two primary functions: system management (detailed in Section \ref{data-flow}) and asynchronous data replication following PBFT consensus rounds (described in Section \ref{data-replication}). 
+Consequently, this layer is analogous to the topic concept found in message brokers.
 
-Such an architecture allows us to preserve all fault tolerance features provided by the PBFT consensus algorithm while increasing system scalability.
-The scaling process of such a system does not require PBFT cluster size growth. 
-Instead, a new small PBFT layer 1 cluster is to be created and connected to the existing RAFT layer 2 cluster, which has a relaxed limit on the maximum number of nodes.
+This architecture allows for the preservation of all fault-tolerance characteristics inherent in the PBFT consensus algorithm while simultaneously enhancing system scalability. 
+Scaling the system does not necessitate an increase in the PBFT cluster size. 
+Instead, a new, smaller PBFT layer-1 cluster is created and connected to the existing RAFT layer-2 cluster, which has a less stringent limit on the maximum number of nodes.
 
 \subsection{Data Flow Separation}\label{data-flow}
 
@@ -312,7 +312,7 @@ In the figure, the last replicated blocks are highlighted in yellow, while the b
 Prior to the algorithm's execution, there are three blockchain nodes awaiting replication: one from Partition 1 and two from Partition 2. 
 Following the replication process, these blocks are appended to their corresponding blockchains within the global ledger.
 
-\begin{figure}
+\begin{figure}[ht!]
     \includegraphics[width=\textwidth]{global-and-local-ledgers.png}
     \caption{Data replication to global ledger} \label{global-and-local-ledgers}
 \end{figure}
