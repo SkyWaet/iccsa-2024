@@ -113,9 +113,9 @@ and the level of on-chain transparency desired.
 The data access interface approach is generally more suitable for scenarios involving large datasets and a primary focus on secure access control, while the data transfer tool 
 approach is better suited for scenarios demanding secure and direct data transfer, even if it potentially introduces limitations in terms of scalability.
 
-\section{Proposed system architecture} \label{architecture}
+\section{System Architecture Overview} \label{architecture}
 
-\subsection{Overview}
+\subsection{System Components}
 
 This section describes the architecture of the proposed system.
 The main goal of such an architecture is to create a combination of the two main blockchain integration paradigms into data transfer systems described in Section \ref{related_work}
@@ -147,7 +147,7 @@ A sample of such an architecture for SDT between two organizations is presented 
     \caption{System architecture for two organizations} \label{system_architecture}
 \end{figure}
 
-\subsection{SDT process scheme}
+\subsection{SDT Process Scheme}
 
 The SDT process is presented in Figure \ref{sending_process}.
 It represents the following algorithm.
@@ -188,7 +188,7 @@ Such an algorithm has the following important features:
 
 \section{Implementation details} \label{implementation_details}
 
-\subsection{Blockchain selection}
+\subsection{Blockchain Selection}
 
 Blockchain is the core component of the SDT system.
 Hence, the particular blockchain implementation has a significant impact on SDT system parameters such as:
@@ -223,7 +223,14 @@ For example, the BFT-SMaRT algorithm used by Hyperledger Fabric \cite{barger2021
 in order to achieve a performance of 2500 transactions per second, which implies the transfer of 720 MB of traffic within a cluster of just 10 nodes during all consensus algorithm stages.
 
 Furthermore, the throughput of such a consensus algorithm depends on the amount of nodes in the system.
-According to research \cite{barger2021byzantine}, BFT-SMaRT achieves maximum throughput when the system contains 7 nodes.
+According to research \cite{barger2021byzantine}, BFT-SMaRT achieves maximum throughput when the system contains 7 nodes (Fig. \ref{fig:smartbft-global}).
+
+\begin{figure}[ht!]
+    \centering\includegraphics[width=\textwidth]{smartbft-global.png}
+    \caption{BFT-SMaRT performance in global network}
+    \label{fig:smartbft-global}
+\end{figure}
+
 Increasing the number of nodes in the system leads to throughput degradation.
 The maximum amount of nodes, according to research \cite{Ke2023}, is limited to 100.
 
@@ -231,19 +238,90 @@ For the reasons described above, a pure PBFT blockchain is not suitable for scal
 Fortunately, this limitation could be solved by using the multi-layered blockchain architecture described in \cite{Bogdanov2024} and \cite{Lin2023} and 
 data flow separation into topics and partitions traditional for message brokers like Apache Kafka \cite{apachekafka}.
 
-This paper proposes the usage of the following two-layered blockchain:
-\begin{itemize}
-    \item The first layer utilizes the PBFT consensus algorithm.
-    Due to known algorithm limitations, this layer is to be constructed from many relatively small (up to 7 nodes) clusters.
-    This layer represents the concept of a partition --- the smallest system part responsible for message transfer.
-    \item The second layer utilizes the RAFT \cite{ongaro2015raft} consensus algorithm.
-    This layer is going to be utilized for two main purposes --- system management and asynchronous data replication after PBFT consensus rounds.
-    Thus, this layer is analogous to the topic concept of a message broker.
-\end{itemize}
+This paper proposes the usage of the two-layered blockchain.
+The first layer utilizes the PBFT consensus algorithm.
+Due to known algorithm limitations, this layer is to be constructed from many relatively small (up to 7 nodes) clusters.
+This layer represents the concept of a partition --- the smallest system part responsible directly for SDT smart contract execution.
+
+The next layer utilizes the RAFT \cite{ongaro2015raft} consensus algorithm.
+This layer is going to be utilized for two main purposes --- system management (described in section \ref{data-flow}) and asynchronous data replication after PBFT consensus rounds (described in section \ref{data-replication}).
+Thus, this layer is analogous to the topic concept of a message broker.
 
 Such an architecture allows us to preserve all fault tolerance features provided by the PBFT consensus algorithm while increasing system scalability.
 The scaling process of such a system does not require PBFT cluster size growth. 
 Instead, a new small PBFT layer 1 cluster is to be created and connected to the existing RAFT layer 2 cluster, which has a relaxed limit on the maximum number of nodes.
+
+\subsection{Data Flow Separation}\label{data-flow}
+
+This section describes the proposed data flow separation scheme.
+As was mentioned above, the data flow of SDT system is to be separated into topics and partitions. 
+
+The topic is considered as the flow of data unified by common theme or list of consumers.
+Due to limitations described above each topic is divided into list of partitions.
+A sample of such a data flow separation into two partitions is presented on fig. \ref{blockchain_layers}.
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{two-layered-blockchain.png}
+    \caption{Structure of topic with two partitions} \label{blockchain_layers}
+\end{figure}
+
+There are two main problems to be solved in order to perform such a data flow separation:
+
+\begin{itemize}
+    \item How to select a specific blockchain node for SDT process initialization considering effictive load balancing?
+    \item How to select partition for specific message?
+\end{itemize}
+
+The specific load balancing algorithm selection is a separate research direction.
+That's why it is not discussed in this article.
+
+Regarding the second problem, in order to select the partition this paper proposes the usage of hash partitioning used by Apache Kafka.
+Thus, the partition will be selected as the remainder of dividing the key hash by the number of partitions.
+
+In order to store the topic configuration data it is proposed to use the layer 2 ledger of blockchain.
+Each node of this blockchain layer should store the list of partitions and list of nodes for each partition.
+All structural changes inside topic (e.g. new partition creation) should be performed using separate smart contract. 
+
+The main advantage of such an approach is that configuration data is replicated across all the blockchain nodes.
+That's why the data senders are able to receive this data from every topic node.
+Thus, system does not have any specific control nodes like Apache Zookeeper nodes for Apache Kafka, which increases system fault tolerance 
+due to the absence of single point of failure.
+
+\subsection{Data Replication}\label{data-replication}
+
+As was mentioned above, one of the key reasons of blockchain usage in data transfer system is that blockchain by storing all data transfer history inside ledger
+provides a way to verofy the fact of the delivery of the message.
+Due to the system separation into several partitions, in order to perform such an operation it is required to determine the specific partition used for specific message transfer.
+Considering the fact that system configuration may change across the time this task become awkward and may require iteration over all existing partitions.
+In order to simplify the process of message delivery verification the data replication to all topic nodes is required.
+
+For the purpose of data replication mechanism creation this article introduces the concepts of global and local ledgers.
+The global ledger is stored at topic level and essentially represent the union of all partition ledgers (called local).
+It is updated asynchronously with data from partition ledgers with usage of special periodic task.
+This task should implement the following algorithm:
+
+\begin{itemize}
+    \item Get list of partitions from topic configuration ledger.
+    \item For each partition:
+    \begin{itemize}
+        \item Find the key of last replicated block.
+        \item Query the local partition ledger to check the presence of new data.
+        \item If new data is found, copy all new data blocks to global ledger. 
+    \end{itemize}
+\end{itemize}
+
+The example of such an algorithm execution for two partitions is presented on Fig. \ref{global-and-local-ledgers}.
+On this picture last replicated blocks are colored in yellow, while nodes to be replicated are colored in green.
+Before the algorithm execution there were three blockchain nodes to be replicated --- one from the Partition 1 and two from Partition 2.
+After the replication process all these blocks are appended to corresponding blockchains in global ledger.
+
+\begin{figure}
+    \includegraphics[width=\textwidth]{global-and-local-ledgers.png}
+    \caption{Data replication to global ledger} \label{global-and-local-ledgers}
+\end{figure}
+
+Considering the fact the algorithm is running on second blockchain layer, all changes to global ledger again are performed using RAFT consensus algorithm.
+
 \section{Summary} \label{summary}
 
 The paper proposes a novel architecture for secure data transfer (SDT) systems leveraging blockchain technology.
