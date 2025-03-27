@@ -1,6 +1,20 @@
 \documentclass[10pt]{llncs}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
+\usepackage{pgfplots}
+\usepackage{amsmath} % For math mode
+
+\definecolor{myblue}{RGB}{24,116,205}
+\definecolor{myorange}{RGB}{255,127,14}
+\definecolor{mygreen}{RGB}{44,160,44}
+
+\pgfplotsset{compat=1.17} % Or your preferred version
+\pgfplotsset{
+legend image code/.code={
+\draw [#1] (0cm,-0.1cm) rectangle (0.6cm,0.1cm);
+},
+}
+
 
 \begin{document}
 \title{Towards Secure Cross-Organizational Data Transfer: A Blockchain-Enabled Message Broker Approach}
@@ -16,7 +30,8 @@
     We propose a novel architecture featuring a message broker-like design that overcomes data size limitations present in existing blockchain-based SDT solutions. 
     The architecture incorporates blockchain, internal data storage within organizations, and connectors facilitating interaction between these components. 
     The SDT process relies on smart contracts for managing data access, transfer, and confirmation, while the actual data is stored off-chain. 
-    We advocate for a private, two-layered blockchain implementation, employing PBFT consensus within smaller clusters for efficient message transfer and RAFT consensus for system management and data replication. This layered approach enhances both fault tolerance and scalability, paving the way for a practical and secure cross-organizational SDT system.
+    We advocate for a private, two-layered blockchain implementation, employing PBFT consensus within smaller clusters for efficient message transfer and RAFT consensus for system management and data replication. 
+    This layered approach enhances both fault tolerance and scalability, paving the way for a practical and secure cross-organizational SDT system.
     
     \keywords{Blockchain \and Secure Data Transfer (SDT) \and Data Security \and Distributed Ledger Technology (DLT) \and Message Broker \and Data Access Control \and Cross-Organizational Data Sharing \and Scalability \and Fault Tolerance}
 \end{abstract}
@@ -41,8 +56,10 @@ Furthermore, blockchain platforms often provide smart contracts, which allow imp
 This suitability has stimulated significant research interest, as evidenced by comprehensive surveys exploring blockchain applications for data sharing and exchange \cite{Song2023} and for specific domains like smart transport \cite{Bagga2022}.
 These surveys highlight the potential of blockchain to address the challenges of SDT in diverse and demanding environments.
 
-This study investigates existing paradigms of blockchain applications to the SDT process and proposes a new approach, which allows to combine the advantages of existing paradigms and create 
-a SDT blockchain-based system that preserves key features of existing approaches but has a message broker-like architecture and relaxed data size limitations.
+This study explores existing blockchain application paradigms for the SDT process and proposes a novel approach that integrates their advantages. 
+The result is a blockchain-based SDT system that maintains key features of established approaches while adopting a message broker-like architecture with relaxed data size limitations. 
+This article presents an architectural overview and describes key implementation details of the proposed system.
+
 The study is organized in the following way.
 Section \ref{related_work} describes existing data transfer paradigms in detail.
 Section \ref{architecture} represents the proposed system architecture.
@@ -84,6 +101,10 @@ Regardless of the chosen paradigm, several enabling technologies and security co
 Kim et al. presented a hybrid decentralized PBFT blockchain framework for OpenStack message queues, aimed at improving fault tolerance and scalability, 
 crucial aspects for reliable data transfer systems \cite{kim2020hybrid}. 
 A publish-subscribe architecture to foster interoperability among different blockchain networks, thus facilitating data exchange across heterogeneous systems, was introduced by Ghaemi et al. \cite{Ghaemi2021}. 
+Both solutions represent the architecture where blockchain acts as a message broker, data transfer process is organized in publish-subscribe way and data flow is separated into topics. 
+Such an architecture is traditional for message brokers like Apache Kafka \cite{apachekafka}.
+That's why it will be referenced as "message broker-like" architecture in the rest of the paper.
+
 Bagga et al. and Xu et al. explored blockchain-based authentication and key agreement protocols for IoV, enhancing the security of data transfer in vehicular contexts \cite{Bagga2021,Xu2021}. 
 Bogdanov et al. focused on the consensus mechanism, exploring a combination of PBFT and Raft \cite{Bogdanov2024}, while Ai et al. proposed a Proof-of-Transactions consensus protocol \cite{Ai2022}, 
 both striving for efficient and scalable agreement in distributed ledgers. 
@@ -117,24 +138,34 @@ approach is better suited for scenarios demanding secure and direct data transfe
 
 \subsection{System Components}
 
-This section describes the architecture of the proposed system.
-The main goal of such an architecture is to create a combination of the two main blockchain integration paradigms into data transfer systems described in Section \ref{related_work}
-in order to create a system with a message broker-like architecture, convenient for data transfer, and relaxed data size limitations compared to existing solutions.
-Essentially, the architecture follows the trends described in related articles:
+This section describes the architecture of the proposed system. 
+The architecture aims to combine two dominant blockchain integration paradigms for data transfer systems, as identified in Section \ref{related_work}. 
+By integrating these approaches, our system seeks to achieve a message broker-like architecture that facilitates convenient data transfer while mitigating the data size limitations inherent in individual solutions.
+
+Our architecture leverages the following trends observed in recent research:
 
 \begin{enumerate}
-    \item Blockchain usage as a message broker: \cite{Ghaemi2021}, \cite{kim2020hybrid}. 
-    The key drawback of these solutions lies in the usage of the ledger for message transfer.
-    It greatly limits the system scalability and transferred data size. 
-    \item Blockchain as an interface to off-chain data (e.g., \cite{Jia2023}, \cite{Wang2024}).
-    Such solutions usually do not have any notification mechanisms.
-    Hence, message receiving becomes a challenging task.
+    \item \textbf{Blockchain as a message broker:} (e.g., \cite{Ghaemi2021}, \cite{kim2020hybrid}). This approach utilizes the blockchain ledger for direct message transfer.
+    \item \textbf{Blockchain as an interface to off-chain data:} (e.g., \cite{Jia2023}, \cite{Wang2024}). This paradigm employs the blockchain to manage access and pointers to data stored off-chain.
 \end{enumerate}
+
+While each of these trends offers unique advantages, they also present limitations:
+
+\begin{enumerate}
+    \item \textbf{Limitations of Blockchain as a Message Broker:} Relying on the blockchain ledger for message transfer significantly restricts system scalability and the size of transmissible data due to the inherent constraints of blockchain technology.
+
+    \item \textbf{Limitations of Blockchain as an Interface to Off-Chain Data:} Solutions implementing this approach often lack native notification mechanisms, making efficient message retrieval a challenge and requiring external polling or other complex notification strategies.
+\end{enumerate}
+
+The proposed system addresses these individual limitations by combining the strengths of both paradigms. 
+This integrated approach allows us to leverage the blockchain for both message brokering and off-chain data referencing, effectively relaxing the constraints on data size and enabling efficient notification mechanisms. 
 
 The proposed architecture assumes that the system should contain the following components:
 
 \begin{itemize}
-    \item Blockchain as the main data transfer tool. 
+    \item Blockchain as the core system component responsible for data transfer process orchestration. 
+    Blockchain nodes act as interfaces to data storages, while smart contracts implement all data transfer mechanisms like
+    data transformation (e.g. message encryption / signing), data verification and message notifications. 
     \item Data storages internally used by counterparties (organizations) to store the data to be sent.
     \item Connectors --- some application used by SDT process counterparties in order to create a connection between their data storages
     and blockchain nodes owned by the organization (mainly inspired by blockchain probes described in \cite{Jia2023}).
@@ -149,33 +180,44 @@ A sample of such an architecture for SDT between two organizations is presented 
 
 \subsection{SDT Process Scheme}
 
-The SDT process is presented in Figure \ref{sending_process}.
-It represents the following algorithm.
-
-The data transfer process commences with the data sender (Org1) initiating a data transfer request to its connector, which serves as the interface to the blockchain. 
-The Org1 connector then persists the data in Org1's storage and gathers associated metadata. 
-Subsequently, the Org1 connector queries the blockchain to initiate the execution of the Secure Data Transfer (SDT) smart contract. 
-The smart contract validates the provided metadata and records it on the ledger. 
-Upon successful metadata validation, the smart contract informs the Org2 connector about the availability of a new message. 
-The smart contract also acknowledges the acceptance of the message delivery to Org1.
-
-To retrieve the data, the Org2 connector queries the blockchain nodes and executes the SDT smart contract. 
-The smart contract verifies Org2's authorization to access the requested data. 
-If authorized, the smart contract requests the data from the Org1 connector. 
-Upon receiving the request, the Org1 connector retrieves the data from Org1's storage and transmits it back to the smart contract.
-
-The smart contract then prepares the data for transfer, which may involve encryption and digital signing depending on the specific smart contract implementation. 
-The prepared data is subsequently returned to the Org2 connector. The Org2 connector then stores the received data in Org2's storage.
-
-To finalize the process, the Org2 connector notifies the blockchain about the message reception via the smart contract. 
-The smart contract updates the message registry, marking the message as delivered. 
-The smart contract also notifies the Org1 connector about the successful completion of the message delivery process. 
-Finally, the Org1 connector informs the data sender about the completion of the data transfer process.
+The SDT process scheme is illustrated in Figure \ref{sending_process} and involves data transfer between two organizations (Org1 and Org2) using a blockchain-mediated system. 
 
 \begin{figure}
     \includegraphics[width=\textwidth]{sending_process.png}
     \caption{SDT process scheme} \label{sending_process}
 \end{figure}
+
+The process can be separated into following stages:
+
+\subsubsection{Data Sending (Org1)}
+
+\begin{enumerate}
+    \item \textbf{Initiate Transfer (1):} The data sender (Org1) initiates a data transfer request to its connector.
+    \item \textbf{Data Persistence and Metadata Collection (2):} The Org1 connector persists the data in Org1's storage and gathers associated metadata.
+    \item \textbf{Smart Contract Invocation (3):} The Org1 connector queries the blockchain to initiate the execution of the SDT smart contract.
+    \item \textbf{Metadata Validation and Recording (4):} The smart contract validates the provided metadata and records it on the ledger.
+    \item \textbf{Notification (5-6):} Upon successful metadata validation, the smart contract notifies the Org2 connector about the availability of a new message and acknowledges message acceptance to Org1.
+\end{enumerate}
+
+\subsubsection{Data Retrieval (Org2)}
+
+\begin{enumerate}
+    \item \textbf{Data Request and Smart Contract Execution (7):} The Org2 connector queries the blockchain nodes and executes the SDT smart contract.
+    \item \textbf{Receiver Authentication (8):} The smart contract verifies Org2's permissions to the requested data.
+    \item \textbf{Data Retrieval from Org1 (9-12):} If authorized, the smart contract requests the data from the Org1 connector.  
+    Upon receiving the request, the Org1 connector retrieves the data from Org1's storage and transmits it back to the smart contract.
+    \item \textbf{Data Preparation (13):} The smart contract prepares the data for transfer, potentially involving encryption and digital signing.
+    \item \textbf{Data Delivery to Org2 (14-16):} The prepared data is returned to the Org2 connector, which then stores the received data in Org2's storage.
+\end{enumerate}
+
+\subsubsection{Process Finalization}
+
+\begin{enumerate}
+    \item \textbf{Message Reception Notification (17):} The Org2 connector notifies the blockchain about the message reception via the smart contract.
+    \item \textbf{Message Registry Update (18):} The smart contract updates the message registry, marking the message as delivered.
+    \item \textbf{Confirmation Notifications (19-22):} The smart contract notifies the Org1 and Org2 connectors about the successful completion of the message delivery process, 
+    and the connectors inform the data sender and data receiver about the completion of the data transfer process respectively.
+\end{enumerate}
 
 Such an algorithm has the following important features:
 
@@ -207,8 +249,8 @@ While several studies mention the potential use of public blockchains, they are 
 Specific examples include:
 
 \begin{itemize}
-    \item \cite{Peng2023} proposes a peer-to-peer file storage and sharing system based on a consortium blockchain.
-    \item \cite{Jia2023} presents a cross-organizational data sharing framework based on blockchain-probes, indicative of a permissioned setting.
+    \item Peng et al. \cite{Peng2023} propose a peer-to-peer file storage and sharing system based on a consortium blockchain.
+    \item Jia et al. \cite{Jia2023} present a cross-organizational data sharing framework based on blockchain-probes, indicative of a permissioned setting.
     \item Numerous papers addressing IoT applications (e.g., \cite{Ai2022,Gupta2022}) often implicitly or explicitly assume a permissioned blockchain context to address security and scalability constraints.
 \end{itemize}
 
@@ -225,9 +267,59 @@ This implies a total traffic volume of 720 MB within a cluster of only 10 nodes 
 Furthermore, the throughput of such a consensus algorithm is contingent upon the number of nodes within the system. 
 Research \cite{barger2021byzantine} indicates that BFT-SMaRT achieves maximum throughput when the system comprises 7 nodes (Fig. \ref{fig:smartbft-global}).
 
-\begin{figure}[ht!]
-    \centering\includegraphics[width=\textwidth]{smartbft-global.png}
-    \caption{BFT-SMaRT performance in a global network}
+\begin{figure}
+    \centering
+    \begin{tikzpicture}
+        \begin{axis}[
+            width=0.8\textwidth, 
+            height=0.6\textwidth,
+            xlabel={Block Size [\#txs]},
+            ylabel={Throughput [tps]},
+            xmin=0, xmax=4.5,
+            ymin=0, ymax=1300,
+            xtick={0.5,1.5,2.5,3.5},
+            xticklabels={100,250,500,1000},
+            legend pos=north west,
+            ymajorgrids=false,
+            bar width=0.2cm,
+            enlarge x limits=0.05,
+            legend style={
+                legend columns=3, 
+                column sep=1ex,  
+                row sep=0.2ex  
+             },
+         ]
+        % Data for Cluster Size 4
+        \addplot[ybar, solid, draw=myblue, color=myblue, fill=myblue] coordinates {
+            (0.5, 400)
+            (1.5, 850)
+            (2.5, 900)
+            (3.5, 1100)
+        };
+        \addlegendentry[solid]{4}
+
+        % Data for Cluster Size 7
+        \addplot[ybar,color=myorange, fill=myorange] coordinates {
+            (0.7, 400)
+            (1.7, 800)
+            (2.7, 980)
+            (3.7, 1200)
+        };
+        \addlegendentry{7}
+
+        % Data for Cluster Size 10
+        \addplot[ybar,color = mygreen, fill=mygreen] coordinates {
+            (0.9, 350)
+            (1.9, 720)
+            (2.9, 880)
+            (3.9, 1050)
+        };
+        \addlegendentry{10}
+
+        \node at (axis cs:0.7,3700) [anchor=south west]{Cluster Size};
+    \end{axis}
+    \end{tikzpicture}
+    \caption{BFT-SMaRT performance in global networks (measured by Barger et. al. \cite{barger2021byzantine})}
     \label{fig:smartbft-global}
 \end{figure}
 
