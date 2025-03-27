@@ -414,21 +414,20 @@ Given that the algorithm operates on the second blockchain layer, all modificati
 
 \section{Summary} \label{summary}
 
-The paper proposes a novel architecture for secure data transfer (SDT) systems leveraging blockchain technology.
-It combines the advantages of two existing paradigms: blockchain as a data access interface and blockchain as a direct data transfer tool.
-The architecture features a message broker-like design, overcoming data size limitations of existing blockchain-based SDT solutions.
-The proposed system incorporates blockchain, data storages internal to organizations, and connectors that bridge the data storages with blockchain nodes.
-The SDT process involves the sender's connector initiating a smart contract on the blockchain, which manages data access, transfer, and confirmation, while the actual data is stored off-chain within the organization's data storage. The paper advocates for a private, two-layered blockchain implementation.
-The first layer uses PBFT consensus within smaller clusters for efficient message transfer (partitions), while the second layer employs RAFT consensus for system management and asynchronous data replication (topics).
-This layered approach enhances both fault tolerance and scalability.
+This paper introduces a novel and secure architecture for cross-organizational data transfer (SDT) that leverages the strengths of blockchain technology. 
+Addressing the limitations of existing blockchain-based SDT solutions, which often struggle with data size constraints and notification mechanisms, our approach combines the "blockchain as a data access interface" and "blockchain as a direct data transfer tool" paradigms. 
+This innovative architecture adopts a message broker-like design, enabling efficient data exchange while mitigating the inherent restrictions on data size. 
+The proposed system comprises a blockchain core, internal organizational data storages, and connectors that seamlessly link these storage facilities to blockchain nodes. 
+The SDT process is orchestrated via smart contracts, which handle data access control, transfer management, and confirmation procedures, with the actual data residing off-chain within the organization's secure storage. 
+To optimize performance and security, we propose a private, two-layered blockchain structure. 
+The first layer utilizes PBFT consensus within smaller clusters, facilitating rapid message transfer within partitions, while the second layer employs RAFT consensus for robust system management and asynchronous data replication across topics.
+This layered design significantly enhances fault tolerance and scalability, offering a substantial improvement over single-layer blockchain implementations. 
+By providing a loose coupling between sender and receiver, improved fault tolerance compared to traditional message brokers, a more convenient message broker-like SDT interface, and greater SDT process customization capabilities through smart contract usage, 
+this architecture presents a practical and secure solution for cross-organizational data sharing.
 
-Further research is going to focus mainly on the following directions:
-
-\begin{enumerate}
-    \item Implementation of the proposed system and evaluation of the developed prototype.
-    \item Selection of specific consensus algorithm implementations.
-    \item Development of a load balancing mechanism for specific partition selection.
-\end{enumerate}
+Future research will focus on several key areas to further refine and validate the proposed architecture. 
+These include the implementation and evaluation of a functional prototype to assess real-world performance, the selection of specific, optimized consensus algorithm implementations, 
+and the development of a dynamic load balancing mechanism for intelligent partition selection to ensure optimal resource utilization and system responsiveness.
 
 \bibliographystyle{splncs04}
 \bibliography{references}
