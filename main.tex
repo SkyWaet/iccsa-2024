@@ -30,8 +30,9 @@ legend image code/.code={
     We propose a novel architecture featuring a message broker-like design that overcomes data size limitations present in existing blockchain-based SDT solutions. 
     The architecture incorporates blockchain, internal data storage within organizations, and connectors facilitating interaction between these components. 
     The SDT process relies on smart contracts for managing data access, transfer, and confirmation, while the actual data is stored off-chain. 
-    We advocate for a private, two-layered blockchain implementation, employing PBFT consensus within smaller clusters for efficient message transfer and RAFT consensus for system management and data replication. 
+    We advocate for a private, two-layered blockchain-based system, employing PBFT consensus within smaller clusters for efficient message transfer and RAFT consensus for system management and data replication. 
     This layered approach enhances both fault tolerance and scalability, paving the way for a practical and secure cross-organizational SDT system.
+    We present an architectural overview and describe key implementation details of proposed system.
     
     \keywords{Blockchain \and Secure Data Transfer (SDT) \and Data Security \and Distributed Ledger Technology (DLT) \and Message Broker \and Data Access Control \and Cross-Organizational Data Sharing \and Scalability \and Fault Tolerance}
 \end{abstract}
@@ -173,7 +174,7 @@ The proposed architecture assumes that the system should contain the following c
 
 A sample of such an architecture for SDT between two organizations is presented in Figure \ref{system_architecture}.
 
-\begin{figure}
+\begin{figure}[ht!]
     \includegraphics[width=\textwidth]{system_architecture.png}
     \caption{System architecture for two organizations} \label{system_architecture}
 \end{figure}
@@ -182,7 +183,7 @@ A sample of such an architecture for SDT between two organizations is presented 
 
 The SDT process scheme is illustrated in Figure \ref{sending_process} and involves data transfer between two organizations (Org1 and Org2) using a blockchain-mediated system. 
 
-\begin{figure}
+\begin{figure}[ht!]
     \includegraphics[width=\textwidth]{sending_process.png}
     \caption{SDT process scheme} \label{sending_process}
 \end{figure}
