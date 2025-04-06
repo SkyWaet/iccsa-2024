@@ -416,26 +416,46 @@ Given that the algorithm operates on the second blockchain layer, all modificati
 
 \section{Supposed AI Application Approaches}
 
-The integration of Artificial Intelligence (AI) with blockchain technology offers promising avenues for enhancing the performance, security, and efficiency of smart contract execution.  
-Specifically, AI can be leveraged in two crucial areas: anomaly detection within smart contracts and dynamic load balancing of smart contract execution requests.
+Building upon the architecture and implementation details described in previous sections, the integration of Artificial Intelligence (AI) offers substantial opportunities to further optimize 
+and enhance the SDT system. 
+Specifically, AI can be instrumental in improving the efficiency and security of smart contract execution, as well as in dynamically managing the workload across the blockchain nodes.
 
-\subsection{Anomaly Detection in Smart Contracts}
+\subsection{AI-Powered Anomaly Detection for Enhanced Security}
 
-Smart contracts, while offering automated execution of agreements, are susceptible to vulnerabilities that can lead to significant financial losses.  
-Employing AI, particularly deep learning techniques, enables the development of sophisticated anomaly detection systems capable of identifying malicious code or unexpected behavior within smart contracts. 
-As highlighted in \cite{Demertzis2020}, blockchain-enabled deep learning can be utilized to create smart contracts that autonomously detect anomalies, thereby improving the security and reliability of Industry 4.0 applications.  
-In case of the SDT systems, AI could be used to detect anomalies in SDT process, such as data corruption or unexpected workload changes.
+As outlined in Section \ref{architecture}, smart contracts play a central role in managing data access, transfer, and message delivery confirmation within the SDT process. 
+However, vulnerabilities in these contracts can compromise the entire system. 
+Drawing inspiration from \cite{Demertzis2020}, AI, and particularly deep learning techniques, can be employed to create a real-time anomaly detection system tailored to the nuances of the SDT process.
 
-\subsection{AI-Driven Load Balancing for Smart Contract Execution}
+This AI system would continuously monitor the execution of SDT smart contracts, learning the expected behavior patterns for each stage of the data transfer process (as depicted in Figure \ref{sending_process}). 
+Deviations from these established patterns, such as:
 
-As the demand for smart contract execution increases, optimizing the allocation of computational resources across the blockchain network becomes crucial. 
-AI algorithms can be employed to dynamically balance the load of smart contract execution requests across different nodes in the network.
- This approach allows for smart selection of the most appropriate node based on various parameters, such as node availability, computational capacity, network latency, and current workload.  
- Singh et al. \cite{Singh2024} demonstrate the potential of AI-integrated blockchain frameworks for optimizing load balancing, particularly in the context of smart EV charging networks. 
- By leveraging AI, the system can predict the demand for charging and intelligently distribute the workload across available charging stations, which is analogous to smart contract execution across different nodes.  
- This dynamic load balancing leads to improved network throughput, reduced latency, and enhanced overall system efficiency. 
- This concept can also be transferred to other applications using blockchain and AI, as shown by Tsang et al. \cite{Tsang2024}.
- In case ot system proposed in this article, AI could be especially useful for load balancing at the partition level in order to select the specific node to start smart contract execution process.
+\begin{itemize}
+    \item \textbf{Unvalidated Metadata Changes:} Detecting attempts to alter metadata recorded on the ledger without proper authorization.
+    \item \textbf{Unexpected Data Transformation:} Identifying unauthorized or incorrect data encryption/signing operations.
+    \item \textbf{Abnormal Access Patterns:} Recognizing unauthorized data retrieval attempts or suspicious data requests from connector applications.
+\end{itemize}
+
+These deviations would be flagged as potential anomalies, triggering alerts and potentially halting the SDT process until the issue is investigated. 
+This proactive approach significantly strengthens the security of the SDT system by mitigating risks associated with malicious or compromised smart contracts.
+
+\subsection{AI-Driven Dynamic Load Balancing for Optimized Performance}
+
+As described in Section \ref{implementation_details}, the two-layered blockchain architecture, coupled with data flow separation into topics and partitions, is designed to enhance the scalability and throughput of the SDT system. 
+However, the efficient allocation of smart contract execution requests across the cluster nodes is crucial to maximizing performance.
+
+Inspired by the work of Singh et al. \cite{Singh2024} and Tsang et al. \cite{Tsang2024}, we propose integrating an AI-powered dynamic load balancing mechanism that considers a multitude of factors to intelligently route SDT smart contract execution requests:
+
+\begin{itemize}
+    \item \textbf{Node Availability and Capacity:} Monitoring the real-time availability and computational capacity of each node within the PBFT clusters in layer 1.
+    \item \textbf{Network Latency:} Assessing the network latency between the requesting connectors and the potential execution nodes.
+    \item \textbf{Current Workload:} Evaluating the current workload of each node to avoid overloading.
+    \item \textbf{Data Locality:} Prioritizing the selection of nodes that have already replicated relevant metadata from the topic, as described in Section \ref{data-replication}, minimizing data transfer overhead.
+\end{itemize}
+
+The AI algorithm, potentially employing reinforcement learning techniques, would continuously learn from past performance data to optimize the routing decisions, ensuring that SDT smart contract execution requests are directed to the most suitable partition based on the prevailing conditions.
+ This dynamic load balancing would lead to improved network throughput, reduced latency, and enhanced overall system efficiency.
+
+By strategically integrating AI into these critical aspects of the SDT system, we can significantly enhance its security, scalability, and performance, making it a more robust and reliable solution for cross-organizational data transfer.
 
 \section{Summary} \label{summary}
 
