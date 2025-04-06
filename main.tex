@@ -32,9 +32,11 @@ legend image code/.code={
     The SDT process relies on smart contracts for managing data access, transfer, and confirmation, while the actual data is stored off-chain. 
     We advocate for a private, two-layered blockchain-based system, employing PBFT consensus within smaller clusters for efficient message transfer and RAFT consensus for system management and data replication. 
     This layered approach enhances both fault tolerance and scalability, paving the way for a practical and secure cross-organizational SDT system.
-    We present an architectural overview and describe key implementation details of proposed system.
+    Furthermore, we explore the potential of integrating Artificial Intelligence (AI) for anomaly detection in smart contract execution and dynamic load balancing across blockchain nodes, further optimizing the system's security and performance.
+    We present an architectural overview and describe key implementation details of proposed system, including potential AI-driven enhancements.
     
-    \keywords{Blockchain \and Secure Data Transfer (SDT) \and Data Security \and Distributed Ledger Technology (DLT) \and Message Broker \and Data Access Control \and Cross-Organizational Data Sharing \and Scalability \and Fault Tolerance}
+    \keywords{Blockchain \and Secure Data Transfer (SDT) \and Data Security \and Distributed Ledger Technology (DLT) \and Message Broker \and Data Access Control \and Cross-Organizational Data Sharing \and Scalability 
+    \and Fault Tolerance \and Artificial Intelligence (AI) \and Anomaly Detection \and Dynamic Load Balancing}
 \end{abstract}
 
 \section{Introduction}
@@ -59,13 +61,15 @@ These surveys highlight the potential of blockchain to address the challenges of
 
 This study explores existing blockchain application paradigms for the SDT process and proposes a novel approach that integrates their advantages. 
 The result is a blockchain-based SDT system that maintains key features of established approaches while adopting a message broker-like architecture with relaxed data size limitations. 
-This article presents an architectural overview and describes key implementation details of the proposed system.
+Furthermore, we investigate the potential of integrating Artificial Intelligence (AI) to enhance the security and efficiency of this system through anomaly detection and dynamic load balancing.
+This article presents an architectural overview and describes key implementation details of the proposed system, including potential AI-driven enhancements.
 
 The study is organized in the following way.
 Section \ref{related_work} describes existing data transfer paradigms in detail.
 Section \ref{architecture} represents the proposed system architecture.
 Section \ref{implementation_details} describes implementation details of the proposed system.
-Finally, Section \ref{summary} concludes this article and denotes further research directions.
+Section \ref{ai_enhancements} explores the potential AI-driven enhancements to the system.
+Finally, Section \ref{summary} concludes this article and denotes further research directions, including future work on AI integration.
 
 \section{Related Work} \label{related_work}
 
@@ -414,7 +418,7 @@ Following the replication process, these blocks are appended to their correspond
 Given that the algorithm operates on the second blockchain layer, all modifications to the global ledger are, again, governed by the RAFT consensus algorithm.
 
 
-\section{Potential AI-Driven Enhancements}
+\section{Potential AI-Driven Enhancements}\label{ai_enhancements}
 
 Building upon the architecture and implementation details described in previous sections, the integration of Artificial Intelligence (AI) offers substantial opportunities to further optimize 
 and enhance the SDT system. 
@@ -467,13 +471,13 @@ The SDT process is orchestrated via smart contracts, which handle data access co
 To optimize performance and security, we propose a private, two-layered blockchain structure. 
 The first layer utilizes PBFT consensus within smaller clusters, facilitating rapid message transfer within partitions, while the second layer employs RAFT consensus for robust system management and asynchronous data replication across topics.
 This layered design significantly enhances fault tolerance and scalability, offering a substantial improvement over single-layer blockchain implementations. 
-By providing a loose coupling between sender and receiver, improved fault tolerance compared to traditional message brokers, a more convenient message broker-like SDT interface, and greater SDT process customization capabilities through smart contract usage, 
+Furthermore, we explored the potential integration of Artificial Intelligence (AI) for anomaly detection and dynamic load balancing to further enhance the security and efficiency of the proposed system.
+By providing a loose coupling between sender and receiver, improved fault tolerance compared to traditional message brokers, a more convenient message broker-like SDT interface, greater SDT process customization capabilities through smart contract usage, and the prospect of AI-driven enhancements,
 this architecture presents a practical and secure solution for cross-organizational data sharing.
 
 Future research will focus on several key areas to further refine and validate the proposed architecture. 
 These include the implementation and evaluation of a functional prototype to assess real-world performance, the selection of specific, optimized consensus algorithm implementations, 
-and the development of a dynamic load balancing mechanism for intelligent partition selection to ensure optimal resource utilization and system responsiveness.
-
+the development of a dynamic load balancing mechanism for intelligent partition selection to ensure optimal resource utilization and system responsiveness, and the integration of AI-driven anomaly detection.
 \bibliographystyle{splncs04}
 \bibliography{references}
 
