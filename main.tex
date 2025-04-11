@@ -25,38 +25,39 @@ legend image code/.code={
 \maketitle
 
 \begin{abstract}
-    Secure data transmission (SDT) is crucial in modern information societies, particularly for cross-organizational data exchange. 
+    Secure data transfer (SDT) is crucial in modern information societies, particularly for cross-organizational data exchange. 
     This paper investigates the application of blockchain technology to create robust SDT systems, combining the benefits of using blockchain as both a data access interface and a direct data transfer tool. 
     We propose a novel architecture featuring a message broker-like design that overcomes data size limitations present in existing blockchain-based SDT solutions. 
     The architecture incorporates blockchain, internal data storage within organizations, and connectors facilitating interaction between these components. 
     The SDT process relies on smart contracts for managing data access, transfer, and confirmation, while the actual data is stored off-chain. 
     We advocate for a private, two-layered blockchain-based system, employing PBFT consensus within smaller clusters for efficient message transfer and RAFT consensus for system management and data replication. 
-    This layered approach enhances both fault tolerance and scalability, paving the way for a practical and secure cross-organizational SDT system.
-    Furthermore, we explore the potential of integrating Artificial Intelligence (AI) for anomaly detection in smart contract execution and dynamic load balancing across blockchain nodes, further optimizing the system's security and performance.
-    We present an architectural overview and describe key implementation details of proposed system, including potential AI-driven enhancements.
+    This layered approach enhances both fault tolerance and scalability capabilities in comparison to existing blockchain approaches and traditional message brokers.
+    Furthermore, we explore the potential of integrating Artificial Intelligence (AI) for anomaly detection in smart contract execution and dynamic load balancing across blockchain nodes in order to optimize 
+    the security and performance characteristics of the system.
+    We present a system architecture overview and describe key implementation details of proposed system, including potential AI-driven enhancements.
     
-    \keywords{Blockchain \and Secure Data Transfer (SDT) \and Data Security \and Distributed Ledger Technology (DLT) \and Message Broker \and Data Access Control \and Cross-Organizational Data Sharing \and Scalability 
-    \and Fault Tolerance \and Artificial Intelligence (AI) \and Anomaly Detection \and Dynamic Load Balancing}
+    \keywords{Blockchain \and Secure Data Transfer (SDT) \and Data Security \and Distributed Ledger Technology (DLT) \and Message Broker \and Data Access Control 
+    \and Fault Tolerance \and Artificial Intelligence (AI)}
 \end{abstract}
 
 \section{Introduction}
 
-In contemporary information societies, secure data transmission (SDT) is essential for maintaining data confidentiality and integrity.
+Nowadays, secure data transfer (SDT) is essential for maintaining data confidentiality and integrity. 
 SDT systems are critical infrastructure components across diverse sectors, including financial institutions, governmental agencies, and enterprises.
+Implementing robust SDT mechanisms becomes particularly challenging when facilitating cross-organizational data exchange or connecting geographically distributed 
+departments within a single organization, i.e., scenarios which require the use of public networks. 
+This fact significantly increases the risk of data loss, data corruption, or unauthorized access to data during the transfer process. 
+Consequently, data integrity verification and counterparty authentication protocols are required. 
+Furthermore, confirmation of data reception is often a critical requirement. 
+The heterogeneity of data transfer technologies utilized by different counterparties further complicates the SDT process.
 
-Implementing robust SDT mechanisms becomes particularly challenging when facilitating cross-organizational data exchange or connecting geographically dispersed departments within a single organization.
-Such scenarios necessitate data transfer across external, public networks, thereby significantly elevating the risk of unauthorized data disclosure or modification during transit.
-Consequently, rigorous data integrity verification and sender authentication protocols are indispensable.
-Furthermore, confirmation of data reception is often a critical requirement.
-The heterogeneity of data exchange technologies employed by different entities can further complicate the SDT process.
-
-Blockchain represents an emerging technology for SDT solutions.
-This technology by design provides core features essential for SDT, such as fault tolerance, ledger data immutability and zero trust between blockchain nodes.
-Moreover, many blockchains are designed to operate in unreliable public networks with nodes running in different heterogeneous clusters owned by separate stakeholders.
-For this reason, blockchains are especially suitable for cross-organizational data transfer.
+Blockchain technology has the potential to enhance existing SDT mechanisms. 
+This technology, by design, provides core features essential for SDT, such as fault tolerance, ledger data immutability, and zero trust between blockchain nodes. 
+Moreover, many blockchains are designed to operate in unreliable public networks with nodes running in different, heterogeneous clusters owned by separate stakeholders, 
+which makes this technology especially suitable for cross-organizational data transfer. 
 Furthermore, blockchain platforms often provide smart contracts, which allow implementing custom data transfer logic directly on the blockchain.
 
-This suitability has stimulated significant research interest, as evidenced by comprehensive surveys exploring blockchain applications for data sharing and exchange \cite{Song2023} and for specific domains like smart transport \cite{Bagga2022}.
+The reasons mentioned above have stimulated significant research interest, as evidenced by comprehensive surveys exploring blockchain applications for data sharing and exchange \cite{Song2023} and for specific domains like smart transport \cite{Bagga2022}. 
 These surveys highlight the potential of blockchain to address the challenges of SDT in diverse and demanding environments.
 
 This study explores existing blockchain application paradigms for the SDT process and proposes a novel approach that integrates their advantages. 
@@ -73,7 +74,7 @@ Finally, Section \ref{summary} concludes this article and denotes further resear
 
 \section{Related Work} \label{related_work}
 
-The integration of blockchain technology into data transfer systems presents two primary paradigms: blockchain as a data access interface and blockchain as a direct data transfer tool.
+The integration of blockchain technology into data transfer systems is implemented according to two primary paradigms: blockchain as a data access interface and blockchain as a direct data transfer tool.
 This section examines the existing literature, classifying studies according to these two distinct roles of blockchain in facilitating data exchange.
 
 \subsection{Blockchain as a Data Access Interface}
@@ -385,7 +386,7 @@ This eliminates the need for dedicated control nodes, such as Apache Zookeeper n
 
 \subsection{Data Replication}\label{data-replication}
 As previously discussed, a primary advantage of utilizing blockchain technology in a data transfer system is its ability to provide verifiable evidence of message delivery by immutably recording the data transfer history within its ledger.
- Given the system's separation into multiple partitions, verifying message delivery necessitates identifying the specific partition used for the message's transmission. 
+ Given the system's separation into multiple partitions, verifying message delivery necessitates identifying the specific partition used for the message's transfer. 
  This task is complicated by the fact that the system configuration may evolve over time, potentially requiring an iterative search across all existing partitions.
  To streamline the message delivery verification process, data replication to all topic nodes is essential.
 
@@ -453,31 +454,32 @@ Inspired by the work of Singh et al. \cite{Singh2024} and Tsang et al. \cite{Tsa
     \item \textbf{Node Availability and Capacity:} Monitoring the real-time availability and computational capacity of each node within the PBFT clusters in layer 1.
     \item \textbf{Network Latency:} Assessing the network latency between the requesting connectors and the potential execution nodes.
     \item \textbf{Current Workload:} Evaluating the current workload of each node to avoid overloading.
-    \item \textbf{Data Locality:} Prioritizing the selection of nodes that have already replicated relevant metadata from the topic, as described in Section \ref{data-replication}, minimizing data transfer overhead.
-\end{itemize}
+    \item \textbf{Data Localization:} Prioritizing the selection of nodes that have already replicated relevant metadata from the topic, as described in Section \ref{data-replication}, minimizing data transfer overhead.
+   \end{itemize}
 
-The AI algorithm, potentially employing reinforcement learning techniques, would continuously learn from past performance data to optimize the routing decisions, ensuring that SDT smart contract execution requests are directed to the most suitable partition based on the prevailing conditions.
+The AI algorithm, potentially employing reinforcement learning techniques, would continuously learn from past performance data to optimize the routing decisions, ensuring that SDT smart contract execution requests are directed to the most suitable node based on the prevailing conditions.
  This dynamic load balancing would lead to improved network throughput, reduced latency, and enhanced overall system efficiency.
-
-By strategically integrating AI into these critical aspects of the SDT system, we can significantly enhance its security, scalability, and performance, making it a more robust and reliable solution for cross-organizational data transfer.
 
 \section{Conclusions and Future Work} \label{summary}
 
-This paper introduces a novel and secure architecture for cross-organizational data transfer (SDT) that leverages the strengths of blockchain technology. 
-Addressing the limitations of existing blockchain-based SDT solutions, which often struggle with data size constraints and notification mechanisms, our approach combines the "blockchain as a data access interface" and "blockchain as a direct data transfer tool" paradigms. 
-This innovative architecture adopts a message broker-like design, enabling efficient data exchange while mitigating the inherent restrictions on data size. 
-The proposed system comprises a blockchain core, internal organizational data storages, and connectors that seamlessly link these storage facilities to blockchain nodes. 
-The SDT process is orchestrated via smart contracts, which handle data access control, transfer management, and confirmation procedures, with the actual data residing off-chain within the organization's secure storage. 
-To optimize performance and security, we propose a private, two-layered blockchain structure. 
-The first layer utilizes PBFT consensus within smaller clusters, facilitating rapid message transfer within partitions, while the second layer employs RAFT consensus for robust system management and asynchronous data replication across topics.
-This layered design significantly enhances fault tolerance and scalability, offering a substantial improvement over single-layer blockchain implementations. 
-Furthermore, we explored the potential integration of Artificial Intelligence (AI) for anomaly detection and dynamic load balancing to further enhance the security and efficiency of the proposed system.
-By providing a loose coupling between sender and receiver, improved fault tolerance compared to traditional message brokers, a more convenient message broker-like SDT interface, greater SDT process customization capabilities through smart contract usage, and the prospect of AI-driven enhancements,
-this architecture presents a practical and secure solution for cross-organizational data sharing.
+Blockchain technology is, by design, a promising solution for enhancing the security and performance characteristics of SDT systems.
+However, existing blockchain application paradigms have either strict transferred data size limitations or interfaces inconvenient for SDT process implementation.
+That's why we propose a novel approach, which is basically a combination of existing paradigms enhanced by a message broker-like architecture.
+Such an approach allows us to combine the strengths of existing solutions in order to achieve better security and performance characteristics, combined with familiar data transfer interfaces
+and data flow separation into topics and partitions.
+The core component of the proposed system is a two-layered blockchain. 
+The first blockchain layer utilizes small PBFT clusters (named partitions) directly for data transfer. 
+These small clusters are then combined into a second layer blockchain with a RAFT consensus algorithm (named topics), utilized for system management and asynchronous data replication across topic nodes.
+Such a two-layered architecture allows us to overcome known PBFT cluster size limitations while preserving fault tolerance capabilities.
+For further system improvements, we explored the potential integration of Artificial Intelligence (AI) for anomaly detection and dynamic load balancing.
+To summarize, the proposed system architecture provides loose coupling between sender and receiver, improved fault tolerance compared to traditional message brokers, 
+a more convenient message broker-like SDT interface, greater SDT process customization capabilities through smart contract usage, and the prospect of AI-driven enhancements, 
+which makes it a practical and secure solution for cross-organizational data sharing.
 
-Future research will focus on several key areas to further refine and validate the proposed architecture. 
-These include the implementation and evaluation of a functional prototype to assess real-world performance, the selection of specific, optimized consensus algorithm implementations, 
-the development of a dynamic load balancing mechanism for intelligent partition selection to ensure optimal resource utilization and system responsiveness, and the integration of AI-driven anomaly detection.
+Future research will focus on several directions. 
+The main research direction is the implementation and evaluation of the proposed system's functional prototype in order to measure its performance characteristics. 
+The list of additional research directions includes the selection of specific, optimized consensus algorithm implementations, the development of a dynamic load balancing mechanism 
+for smart contract execution node selection, and the integration of AI-driven SDT process anomaly detection.
 
 \begin{credits}
     \subsubsection{\ackname} Supported by Saint Petersburg State University, project ID: 95438429.
