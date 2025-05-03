@@ -151,8 +151,8 @@ By integrating these approaches, our system seeks to achieve a message broker-li
 Our architecture leverages the following trends observed in recent research:
 
 \begin{enumerate}
-    \item \textbf{Blockchain as a message broker:} (e.g., \cite{Ghaemi2021}, \cite{kim2020hybrid}). This approach utilizes the blockchain ledger for direct message transfer.
-    \item \textbf{Blockchain as an interface to off-chain data:} (e.g., \cite{Jia2023}, \cite{Wang2024}). This paradigm employs the blockchain to manage access and pointers to data stored off-chain.
+    \item \textbf{Blockchain as a message broker:} (e.g., \cite{kim2020hybrid}, \cite{Ghaemi2021}). This approach utilizes the blockchain ledger for direct message transfer.
+    \item \textbf{Blockchain as an interface to off-chain data:} (e.g., \cite{Wang2024}, \cite{Jia2023}). This paradigm employs the blockchain to manage access and pointers to data stored off-chain.
 \end{enumerate}
 
 While each of these trends offers unique advantages, they also present limitations:
@@ -257,7 +257,7 @@ Specific examples include:
 \begin{itemize}
     \item Peng et al. \cite{Peng2023} propose a peer-to-peer file storage and sharing system based on a consortium blockchain.
     \item Jia et al. \cite{Jia2023} present a cross-organizational data sharing framework based on blockchain-probes, indicative of a permissioned setting.
-    \item Numerous papers addressing IoT applications (e.g., \cite{Ai2022,Gupta2022}) often implicitly or explicitly assume a permissioned blockchain context to address security and scalability constraints.
+    \item Numerous papers addressing IoT applications (e.g., \cite{Gupta2022,Ai2022}) often implicitly or explicitly assume a permissioned blockchain context to address security and scalability constraints.
 \end{itemize}
 
 Therefore, this paper posits that a private blockchain is the most suitable option for SDT system implementation.
@@ -333,7 +333,7 @@ Increasing the number of nodes beyond this optimum leads to a degradation in thr
 The maximum permissible number of nodes, according to research \cite{Ke2023}, is limited to approximately 100.
 
 For the reasons articulated above, a pure PBFT blockchain is not ideally suited for the creation of scalable and fault-tolerant systems. 
-Fortunately, this limitation can be addressed by leveraging the multi-layered blockchain architecture described in \cite{Bogdanov2024} and \cite{Lin2023}, 
+Fortunately, this limitation can be addressed by leveraging the multi-layered blockchain architecture described in \cite{Lin2023} and \cite{Bogdanov2024}, 
 coupled with the data flow separation into topics and partitions, a common practice in message brokers such as Apache Kafka \cite{apachekafka}.
 
 This paper proposes the use of a two-layered blockchain architecture. 
@@ -484,7 +484,7 @@ for smart contract execution node selection, and the integration of AI-driven SD
 \begin{credits}
     \subsubsection{\ackname} Supported by Saint Petersburg State University, project ID: 95438429.
 \end{credits}
-\bibliographystyle{splncs04}
+\bibliographystyle{splncs04_unsorted}
 \bibliography{references}
 
 \end{document}
